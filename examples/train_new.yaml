@@ -1,0 +1,69 @@
+defaults:
+  - _self_
+
+env_vars:
+  wandb_entity: '4771ea62653801649992b8e067524cba905d137e'
+  # Additional environment variables can be added here if needed
+
+seed: 42
+window_size: 10
+eval_window_size: 5
+batch_size: 256
+epochs: 100
+eval_freq: 10
+eval_on_env_freq: 25
+num_env_evals: 5
+num_final_evals: 20
+num_final_eval_per_goal: 5
+
+wandb:
+  project: "min-cbet"
+  entity: '4771ea62653801649992b8e067524cba905d137e'
+
+device: cpu
+optim:
+  lr: 5.5e-5
+  weight_decay: 2e-4
+  betas: [0.9, 0.999]
+
+env:
+  gym:
+    _target_: gym.make
+    id: hopper-bullet-medium-v0
+  obs_dim: 15
+  act_dim: 3
+  goal_dim: 0
+
+data:
+  _target_: dataset_new.get_d4rl_dataset
+  env_name: hopper-bullet-medium-v0
+  dataset_path: "C:\\Users\\anush\\.d4rl\\datasets\\hopper-bullet-medium-v0.hdf5"
+  goal_conditional: false # true-future
+  future_seq_len: 10
+
+save_every: 10
+save_path: "checkpoints/hopper-medium-v0_${now:%Y-%m-%d}_${now:%H-%M-%S}"
+load_path: null
+
+model:
+  _target_: behavior_transformer.BehaviorTransformer
+  obs_dim: 15
+  act_dim: 3
+  goal_dim: 0
+  n_clusters: 64
+  kmeans_fit_steps: 50
+  gpt_model:
+    _target_: behavior_transformer.GPT
+    config:
+      _target_: behavior_transformer.GPTConfig
+      block_size: 20
+      input_dim: 15
+      n_layer: 6
+      n_head: 6
+      n_embd: 120
+
+#goal_fn:
+  #_target_: goal_functions.GoalFunction  # Update with the correct module path
+  #goal_dim: 11
+  #method: "future"  # Choose based on your requirement
+  #noise_std: 0.1  # Optional: Only applicable for certain methods

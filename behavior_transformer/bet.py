@@ -85,6 +85,7 @@ class BehaviorTransformer(nn.Module):
             self._cbet_method = self.GOAL_SPEC.concat
         else:
             self._cbet_method = self.GOAL_SPEC.stack
+        print(f"CBET Method: {self._cbet_method}")  # Debug statement
 
         self._gpt_model = gpt_model
         # For now, we assume the number of clusters is given.
@@ -106,12 +107,13 @@ class BehaviorTransformer(nn.Module):
         self._cluster_centers = torch.zeros((n_clusters, act_dim)).float()
         self._criterion = FocalLoss(gamma=gamma)
 
+
     def forward(
         self,
         obs_seq: torch.Tensor,
         goal_seq: Optional[torch.Tensor],
         action_seq: Optional[torch.Tensor],
-    ) -> Tuple[Optional[torch.Tensor], Optional[torch.Tensor]]:
+        ) -> Tuple[Optional[torch.Tensor], Optional[torch.Tensor], Dict[str, float]]:
         if self._current_steps == 0:
             self._cluster_centers = self._cluster_centers.to(obs_seq.device)
         if self._current_steps < self._kmeans_fit_steps and action_seq is not None:

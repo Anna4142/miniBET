@@ -4,10 +4,10 @@ defaults:
 env_vars:
   # TODO fill these out
   datasets:
-    carla_multipath_town04_merge: /path/to/datasets/carla_dataset
-    relay_kitchen: /path/to/datasets/relay_kitchen_dataset
-    multimodal_push_fixed_target: /path/to/datasets/block_push_dataset
-  wandb_entity: your_wandb_entity
+    carla_multipath_town04_merge: /datasets/carla_dataset
+    relay_kitchen: /datasets/relay_kitchen_dataset
+    multimodal_push_fixed_target: /datasets/block_push_dataset
+  wandb_entity: 4771ea62653801649992b8e067524cba905d137e
 
 seed: 42
 window_size: 10
